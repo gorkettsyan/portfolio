@@ -1,0 +1,39 @@
+:root {
+  /* Colors */
+  --bg-void: #050508;
+  --bg-glass: rgba(8, 8, 20, 0.72);
+  --accent-cyan: #00f5d4;
+  --accent-dim: #00a896;
+  --text-primary: #e8eaf0;
+  --text-muted: #6b7280;
+  --border-glow: rgba(0, 245, 212, 0.15);
+
+  /* Typography */
+  --font-display: 'Syne', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Type scale */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 2rem;
+  --text-4xl: 3.5rem;
+  --text-6xl: 6rem;
+
+  /* Spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 300ms ease;
+  --transition-slow: 600ms ease;
+}

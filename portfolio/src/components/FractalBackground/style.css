@@ -1,0 +1,40 @@
+.fractal-background-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  display: block;
+}
+
+.fractal-error-fallback {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  background: linear-gradient(135deg, var(--bg-void) 0%, var(--accent-dim) 50%, var(--accent-cyan) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+}
+
+.fractal-fps-counter {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 100;
+  padding: 0.5rem 1rem;
+  background: rgba(8, 8, 20, 0.8);
+  border: 1px solid var(--border-glow);
+  border-radius: 0.25rem;
+  color: var(--accent-cyan);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  backdrop-filter: blur(8px);
+}
