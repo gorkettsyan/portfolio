@@ -1,0 +1,159 @@
+/* Sierpinski Nav — Full-viewport container */
+.sierpinski-nav {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Canvas */
+.sierpinski-canvas {
+  display: block;
+  cursor: pointer;
+}
+
+/* Overlay container */
+.sierpinski-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Project labels — minimal floating text by default */
+.sierpinski-label {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  text-align: center;
+  padding: var(--space-1) var(--space-2);
+  transition: transform var(--transition-fast);
+}
+
+.sierpinski-label__title {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--accent-cyan);
+  text-shadow:
+    0 0 12px rgba(0, 245, 212, 0.5),
+    0 1px 4px rgba(0, 0, 0, 0.8);
+  letter-spacing: 0.04em;
+}
+
+/* Expanded state on hover — glass card appears */
+.sierpinski-label--active {
+  background: var(--bg-glass);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-glow);
+  border-radius: 8px;
+  padding: var(--space-2) var(--space-4);
+  transform: translate(-50%, -50%) scale(1.08);
+  z-index: 2;
+}
+
+.sierpinski-label--active .sierpinski-label__title {
+  text-shadow: 0 0 16px rgba(0, 245, 212, 0.7);
+}
+
+.sierpinski-label__desc {
+  display: block;
+  margin-top: var(--space-1);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  white-space: nowrap;
+  line-height: 1.3;
+}
+
+/* Breadcrumb */
+.sierpinski-breadcrumb {
+  position: absolute;
+  top: var(--space-6);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  z-index: 10;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
+.sierpinski-breadcrumb__back {
+  background: none;
+  border: 1px solid var(--border-glow);
+  border-radius: 4px;
+  color: var(--accent-cyan);
+  font-size: var(--text-base);
+  cursor: pointer;
+  padding: var(--space-1) var(--space-2);
+  line-height: 1;
+  transition: background var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.sierpinski-breadcrumb__back:hover {
+  background: rgba(0, 245, 212, 0.1);
+  border-color: var(--accent-cyan);
+}
+
+.sierpinski-breadcrumb__list {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sierpinski-breadcrumb__item {
+  display: flex;
+  align-items: center;
+}
+
+.sierpinski-breadcrumb__sep {
+  margin: 0 var(--space-2);
+  color: var(--text-muted);
+}
+
+.sierpinski-breadcrumb__link {
+  background: none;
+  border: none;
+  color: var(--accent-dim);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  padding: 0;
+  transition: color var(--transition-fast);
+}
+
+.sierpinski-breadcrumb__link:hover {
+  color: var(--accent-cyan);
+}
+
+.sierpinski-breadcrumb__current {
+  color: var(--text-primary);
+}
+
+/* Page title when at root */
+.sierpinski-nav__title {
+  position: absolute;
+  top: var(--space-6);
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  color: var(--text-primary);
+  z-index: 10;
+  pointer-events: none;
+}

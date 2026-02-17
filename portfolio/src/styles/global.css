@@ -68,6 +68,16 @@ body {
   color: var(--bg-void);
 }
 
+/* Page layout */
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
 /* Glass utility */
 .glass {
   background: var(--bg-glass);
