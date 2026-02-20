@@ -282,6 +282,16 @@ export function FractalTree() {
           {hovered.node.data.description && (
             <span className="ft-tt-desc">{hovered.node.data.description}</span>
           )}
+          {hovered.node.data.tech?.length > 0 && (
+            <div className="ft-tt-tech">
+              {hovered.node.data.tech.map(t => (
+                <span key={t} className="ft-tt-chip">{t}</span>
+              ))}
+            </div>
+          )}
+          {hovered.node.data.private && (
+            <span className="ft-tt-private">private repo</span>
+          )}
         </div>
       )}
       <span className="ft-page-label">Projects</span>

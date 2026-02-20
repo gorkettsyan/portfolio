@@ -46,6 +46,33 @@
   color: var(--text-muted);
 }
 
+.ft-tt-tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  margin-top: 2px;
+}
+
+.ft-tt-chip {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: rgba(0, 245, 212, 0.75);
+  background: rgba(0, 245, 212, 0.08);
+  border: 1px solid rgba(0, 245, 212, 0.2);
+  border-radius: 3px;
+  padding: 1px 5px;
+  white-space: nowrap;
+}
+
+.ft-tt-private {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: rgba(0, 245, 212, 0.4);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-top: 1px;
+}
+
 /* ── Page label ── */
 .ft-page-label {
   position: absolute;

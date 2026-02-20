@@ -1,0 +1,69 @@
+# Category branches (depth 1)
+- address: [0]
+  title: Web Platforms
+  description: Full-stack web applications
+
+- address: [1]
+  title: Tools & Plugins
+  description: Productivity tools and integrations
+
+- address: [2]
+  title: Experiments
+  description: Research and personal projects
+
+# Web Platforms
+- address: [0, 0]
+  title: On-Page SEO Tool
+  description: Data-driven SERP analysis and page optimization platform
+  tech: [Python, Django, AWS, Terraform, JavaScript, VueJS]
+  private: true
+
+- address: [0, 1]
+  title: Mulberry 2.0
+  description: Workflow automation system for medium and large organizations
+  tech: [Python, Wheezyweb, Flask, JavaScript, PostgreSQL, Docker]
+  private: true
+
+- address: [0, 2]
+  title: Community Revenue System
+  description: Revenue management platform for community organizations
+  tech: [Python, Wheezyweb, JavaScript, PostgreSQL, Docker]
+  private: true
+
+# Tools & Plugins
+- address: [1, 0]
+  title: Meeting Manager
+  description: Plugin for scheduling and managing organizational meetings
+  tech: [Python, Wheezyweb, JavaScript, PostgreSQL, Docker]
+  private: true
+
+- address: [1, 1]
+  title: Security Microservices
+  description: Scalable services for security posture and policy enforcement
+  tech: [Python, FastAPI, AWS ECS, SQS, Fargate, GitHub Actions]
+  private: true
+
+- address: [1, 2]
+  title: M365 Integration
+  description: Microsoft Graph, Exchange Online and SharePoint connector
+  tech: [Python, FastAPI, Microsoft Graph API, Azure AD]
+  private: true
+
+# Experiments
+- address: [2, 0]
+  title: Sierpinski Triangle
+  description: Fractal visualization via the Chaos Game method
+  tech: [Python]
+  url: https://github.com
+
+- address: [2, 1]
+  title: Fractal Portfolio
+  description: This interactive fractal-based portfolio site
+  tech: [React, Vite, WebGL, Canvas 2D]
+  url: https://github.com
+
+- address: [2, 2]
+  title: Shader Lab
+  description: Interactive GLSL fragment shader playground
+  tech: [WebGL, GLSL, JavaScript]
+  private: true
