@@ -1,0 +1,61 @@
+.ft-wrap {
+  position: fixed;
+  inset: 0;
+  pointer-events: all;
+  z-index: 1;
+}
+
+.ft-canvas {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* ── Tooltip ── */
+.ft-tooltip {
+  position: absolute;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: rgba(5, 5, 8, 0.82);
+  border: 1px solid rgba(0, 245, 212, 0.25);
+  border-radius: 6px;
+  padding: 6px 10px;
+  backdrop-filter: blur(8px);
+  white-space: nowrap;
+  animation: ft-tip-in 0.15s ease forwards;
+}
+
+@keyframes ft-tip-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.ft-tt-title {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--accent-cyan);
+  font-weight: 600;
+}
+
+.ft-tt-desc {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+/* ── Page label ── */
+.ft-page-label {
+  position: absolute;
+  top: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(0, 245, 212, 0.3);
+  pointer-events: none;
+}
