@@ -1,7 +1,7 @@
 export const portfolio = {
-  name: 'RALPH',
-  title: 'Creative Developer',
-  bio: 'Building beautiful, performant web experiences with React and modern CSS.',
+  name: 'GOR',
+  title: 'Senior Software Engineer',
+  bio: '7 years building scalable backend systems, cloud infrastructure, and creative web experiences.',
   projects: [],
   socials: []
 };
