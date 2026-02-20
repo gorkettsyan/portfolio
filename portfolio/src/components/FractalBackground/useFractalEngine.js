@@ -100,7 +100,7 @@ export function useFractalEngine(canvasRef, type = 'mandelbrot', options = {}) {
         } else if (type === 'lsystem') {
           renderLSystem(canvas, { progress })
         } else if (type === 'network') {
-          renderNetworkGraph(canvas, { progress })
+          renderNetworkGraph(canvas, { progress, mousePos: mousePosRef.current })
         }
 
         // FPS counter

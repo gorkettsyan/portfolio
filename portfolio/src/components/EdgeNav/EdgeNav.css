@@ -1,0 +1,38 @@
+.edge-nav {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.edge-nav__label {
+  pointer-events: auto;
+  writing-mode: vertical-lr;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--accent-cyan);
+  text-decoration: none;
+  padding: var(--space-4);
+  transition: opacity var(--transition-fast);
+  cursor: pointer;
+  user-select: none;
+}
+
+.edge-nav__label--left {
+  text-orientation: mixed;
+}
+
+.edge-nav__label--right {
+  text-orientation: mixed;
+}
+
+@media (hover: none) {
+  .edge-nav__label {
+    opacity: 0.5 !important;
+  }
+}

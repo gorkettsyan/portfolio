@@ -1,18 +1,17 @@
 import '@/styles/tokens.css'
 import '@/styles/global.css'
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { useRef, useState, useEffect } from 'react'
 import { FractalBackground } from '@/components/FractalBackground'
 import { useMousePosition } from '@/hooks/useMousePosition'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
+import { EdgeNav } from '@/components/EdgeNav/EdgeNav'
 import Hero from '@/pages/Hero'
-import About from '@/pages/About'
 import Projects from '@/pages/Projects'
 import Contact from '@/pages/Contact'
 
 const ROUTE_FRACTAL = {
-  '/': 'mandelbrot',
-  '/about': 'julia',
+  '/': 'julia',
   '/projects': null,
   '/contact': 'network',
 }
@@ -66,10 +65,11 @@ function AppShell() {
         progress={progress}
         reducedMotion={reducedMotion}
       />
+      {location.pathname === '/' && <EdgeNav mousePos={mousePos} />}
       <main>
         <Routes>
           <Route path="/" element={<Hero />} />
-          <Route path="/about" element={<About />} />
+          <Route path="/about" element={<Navigate to="/" replace />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/contact" element={<Contact />} />
         </Routes>
