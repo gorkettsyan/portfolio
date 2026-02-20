@@ -278,7 +278,15 @@ export function FractalTree() {
       />
       {hovered?.node?.data && (
         <div className="ft-tooltip" style={{ left: hovered.x + 14, top: hovered.y - 40 }}>
-          <span className="ft-tt-title">{hovered.node.data.title}</span>
+          <div className="ft-tt-header">
+            <span className="ft-tt-title">{hovered.node.data.title}</span>
+            {hovered.node.data.company && (
+              <span className="ft-tt-company">{hovered.node.data.company}</span>
+            )}
+          </div>
+          {hovered.node.data.period && (
+            <span className="ft-tt-period">{hovered.node.data.period}</span>
+          )}
           {hovered.node.data.description && (
             <span className="ft-tt-desc">{hovered.node.data.description}</span>
           )}

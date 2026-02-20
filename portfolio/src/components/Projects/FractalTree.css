@@ -18,14 +18,34 @@
   pointer-events: none;
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  background: rgba(5, 5, 8, 0.82);
+  gap: 3px;
+  background: rgba(5, 5, 8, 0.88);
   border: 1px solid rgba(0, 245, 212, 0.25);
   border-radius: 6px;
-  padding: 6px 10px;
+  padding: 8px 12px;
   backdrop-filter: blur(8px);
-  white-space: nowrap;
+  max-width: 280px;
+  white-space: normal;
   animation: ft-tip-in 0.15s ease forwards;
+}
+
+.ft-tt-header {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.ft-tt-company {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: rgba(0, 245, 212, 0.5);
+}
+
+.ft-tt-period {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: rgba(0, 245, 212, 0.35);
+  margin-bottom: 1px;
 }
 
 @keyframes ft-tip-in {

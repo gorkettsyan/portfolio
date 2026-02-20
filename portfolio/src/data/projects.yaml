@@ -14,56 +14,68 @@
 # Web Platforms
 - address: [0, 0]
   title: On-Page SEO Tool
-  description: Data-driven SERP analysis and page optimization platform
+  description: Analyzes and compares website pages against SERP rankings using data-driven insights instead of guesswork. Includes page scraping microservice, dashboard, and SQS-based autoscaling on Fargate.
   tech: [Python, Django, AWS, Terraform, JavaScript, VueJS]
+  company: GrowthFoundry
+  period: Oct 2021 – May 2024
   private: true
 
 - address: [0, 1]
   title: Mulberry 2.0
-  description: Workflow automation system for medium and large organizations
+  description: Workflow automation platform for medium and large organizations. Reduces workflow processing time 1.5–3x by identifying and eliminating business process inefficiencies. Exposes REST API and JSONRPC services.
   tech: [Python, Wheezyweb, Flask, JavaScript, PostgreSQL, Docker]
+  company: VXSoft
+  period: Mar 2019 – Aug 2021
   private: true
 
 - address: [0, 2]
   title: Community Revenue System
-  description: Revenue management platform for community organizations
+  description: Revenue management platform built for community organizations, providing structured financial tracking and reporting across distributed stakeholders.
   tech: [Python, Wheezyweb, JavaScript, PostgreSQL, Docker]
+  company: VXSoft
+  period: Mar 2019 – Aug 2021
   private: true
 
 # Tools & Plugins
 - address: [1, 0]
   title: Meeting Manager
-  description: Plugin for scheduling and managing organizational meetings
+  description: Plugin for Mulberry 2.0 enabling organization-wide meeting scheduling, agenda management, and outcome tracking integrated directly into the workflow engine.
   tech: [Python, Wheezyweb, JavaScript, PostgreSQL, Docker]
+  company: VXSoft
+  period: Mar 2019 – Aug 2021
   private: true
 
 - address: [1, 1]
   title: Security Microservices
-  description: Scalable services for security posture and policy enforcement
+  description: Scalable microservices for security posture assessment, policy enforcement, and tenant-level configuration management. Deployed to ECS/Fargate with autoscaling driven by SQS queue depth.
   tech: [Python, FastAPI, AWS ECS, SQS, Fargate, GitHub Actions]
+  company: Overe
+  period: May 2024 – Present
   private: true
 
 - address: [1, 2]
   title: M365 Integration
-  description: Microsoft Graph, Exchange Online and SharePoint connector
+  description: Connector for Microsoft 365 services handling authentication, permission scopes, and API throttling across Microsoft Graph API, Exchange Online, and SharePoint.
   tech: [Python, FastAPI, Microsoft Graph API, Azure AD]
+  company: Overe
+  period: May 2024 – Present
   private: true
 
 # Experiments
 - address: [2, 0]
   title: Sierpinski Triangle
-  description: Fractal visualization via the Chaos Game method
+  description: Fractal visualization of the Sierpinski triangle using the Chaos Game method — an iterative random process that converges to a self-similar fractal structure.
   tech: [Python]
   url: https://github.com
 
 - address: [2, 1]
   title: Fractal Portfolio
-  description: This interactive fractal-based portfolio site
+  description: This interactive portfolio site built with React and WebGL, featuring fractal backgrounds, a canvas-based fractal tree for projects, and a mouse-reactive network graph.
   tech: [React, Vite, WebGL, Canvas 2D]
   url: https://github.com
 
 - address: [2, 2]
   title: Shader Lab
-  description: Interactive GLSL fragment shader playground
+  description: Interactive GLSL fragment shader playground for exploring generative visuals, noise functions, and GPU-based rendering techniques.
   tech: [WebGL, GLSL, JavaScript]
   private: true
