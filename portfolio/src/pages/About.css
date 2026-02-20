@@ -1,0 +1,256 @@
+.about-wrap {
+  min-height: 100vh;
+  padding: 5rem 2rem 6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Container ── */
+.about-container {
+  width: 100%;
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+/* ── Header ── */
+.about-header {
+  opacity: 0;
+  animation: about-in 0.7s ease 0.05s forwards;
+}
+
+.about-name {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 7vw, 5rem);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  line-height: 1;
+  margin: 0 0 0.5rem;
+}
+
+.about-role {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--accent-dim);
+  margin: 0 0 1.25rem;
+}
+
+.about-bio {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.85;
+  max-width: 540px;
+  margin: 0;
+}
+
+/* ── Sections ── */
+.about-section {
+  opacity: 0;
+  animation: about-in 0.7s ease forwards;
+}
+
+.about-section-title {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.38em;
+  text-transform: uppercase;
+  color: rgba(0, 245, 212, 0.4);
+  margin: 0 0 1.75rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.about-section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(0, 245, 212, 0.12);
+}
+
+/* ── Timeline ── */
+.about-timeline {
+  padding-left: 0.75rem;
+  border-left: 1px solid rgba(0, 245, 212, 0.15);
+  display: flex;
+  flex-direction: column;
+}
+
+.about-tl-item {
+  position: relative;
+  padding: 0 0 2.75rem 1.75rem;
+}
+
+.about-tl-item:last-child {
+  padding-bottom: 0;
+}
+
+.about-tl-dot {
+  position: absolute;
+  left: -5px;
+  top: 6px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent-cyan);
+  box-shadow: 0 0 10px rgba(0, 245, 212, 0.5);
+}
+
+.about-tl-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin-bottom: 0.3rem;
+}
+
+.about-tl-company {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.about-tl-period {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: rgba(0, 245, 212, 0.38);
+  letter-spacing: 0.08em;
+}
+
+.about-tl-role {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-dim);
+  margin-bottom: 0.85rem;
+}
+
+.about-tl-points {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.about-tl-points li {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.65;
+  padding-left: 1.1rem;
+  position: relative;
+}
+
+.about-tl-points li::before {
+  content: '·';
+  position: absolute;
+  left: 0;
+  color: var(--accent-cyan);
+  opacity: 0.45;
+}
+
+/* ── Skills ── */
+.about-skills {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.about-skill-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.about-skill-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(0, 245, 212, 0.38);
+  width: 72px;
+  flex-shrink: 0;
+  padding-top: 4px;
+}
+
+.about-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.about-chip {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: rgba(0, 245, 212, 0.78);
+  background: rgba(0, 245, 212, 0.06);
+  border: 1px solid rgba(0, 245, 212, 0.18);
+  border-radius: 3px;
+  padding: 2px 8px;
+}
+
+/* ── Education ── */
+.about-education {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.about-edu-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  gap: 0.2rem 1.5rem;
+}
+
+.about-edu-degree {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.about-edu-inst {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.about-edu-period {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: rgba(0, 245, 212, 0.38);
+  grid-column: 2;
+  grid-row: 1;
+  text-align: right;
+  align-self: center;
+}
+
+/* ── Animation ── */
+@keyframes about-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

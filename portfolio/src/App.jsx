@@ -7,23 +7,24 @@ import { useMousePosition } from '@/hooks/useMousePosition'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 import { EdgeNav } from '@/components/EdgeNav/EdgeNav'
 import Hero from '@/pages/Hero'
+import About from '@/pages/About'
 import Projects from '@/pages/Projects'
 import Contact from '@/pages/Contact'
 
 const ROUTE_FRACTAL = {
-  '/': 'julia',
+  '/':        'julia',
+  '/about':   null,
   '/projects': null,
   '/contact': 'network',
 }
 
 function useTimeProgress(type) {
   const [progress, setProgress] = useState(0)
-  const rafRef = useRef(null)
+  const rafRef   = useRef(null)
   const startRef = useRef(null)
 
   useEffect(() => {
-    const isCanvas2D = type === 'sierpinski' || type === 'lsystem' || type === 'network'
-    if (!isCanvas2D) {
+    if (type !== 'network') {
       setProgress(0)
       return
     }
@@ -39,23 +40,18 @@ function useTimeProgress(type) {
     }
 
     rafRef.current = requestAnimationFrame(tick)
-
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current)
-    }
+    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current) }
   }, [type])
 
   return progress
 }
 
 function AppShell() {
-  const location = useLocation()
-  const mousePos = useMousePosition()
+  const location     = useLocation()
+  const mousePos     = useMousePosition()
   const reducedMotion = useReducedMotion()
-  const fractalType = location.pathname in ROUTE_FRACTAL
-    ? ROUTE_FRACTAL[location.pathname]
-    : 'mandelbrot'
-  const progress = useTimeProgress(fractalType)
+  const fractalType  = ROUTE_FRACTAL[location.pathname] ?? null
+  const progress     = useTimeProgress(fractalType)
 
   return (
     <>
@@ -68,10 +64,11 @@ function AppShell() {
       {location.pathname === '/' && <EdgeNav mousePos={mousePos} />}
       <main>
         <Routes>
-          <Route path="/" element={<Hero />} />
-          <Route path="/about" element={<Navigate to="/" replace />} />
+          <Route path="/"        element={<Hero />} />
+          <Route path="/about"   element={<About />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="*"        element={<Navigate to="/" replace />} />
         </Routes>
       </main>
     </>

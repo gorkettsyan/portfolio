@@ -78,6 +78,26 @@ body {
   z-index: 1;
 }
 
+/* Back button — shared across all inner pages */
+.back-btn {
+  position: fixed;
+  top: 2rem;
+  left: 2rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(0, 245, 212, 0.4);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+  z-index: 10;
+  pointer-events: auto;
+}
+
+.back-btn:hover {
+  color: var(--accent-cyan);
+}
+
 /* Glass utility */
 .glass {
   background: var(--bg-glass);

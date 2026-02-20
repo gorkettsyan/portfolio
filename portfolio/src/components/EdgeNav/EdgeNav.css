@@ -31,6 +31,15 @@
   text-orientation: mixed;
 }
 
+.edge-nav__label--bottom {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  writing-mode: horizontal-tb;
+  letter-spacing: 0.25em;
+}
+
 @media (hover: none) {
   .edge-nav__label {
     opacity: 0.5 !important;

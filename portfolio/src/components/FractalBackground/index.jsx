@@ -14,7 +14,7 @@ function easeInOut(t) {
  */
 function FractalCanvas({ type, mousePos, progress, style }) {
   const canvasRef = useRef(null)
-  const { fps, isReady, error } = useFractalEngine(canvasRef, type, { mousePos, progress })
+  const { isReady, error } = useFractalEngine(canvasRef, type, { mousePos, progress })
 
   if (!type) return null
 
@@ -29,11 +29,6 @@ function FractalCanvas({ type, mousePos, progress, style }) {
       {error && (
         <div className="fractal-error-fallback">
           {error}
-        </div>
-      )}
-      {process.env.NODE_ENV === 'development' && isReady && (
-        <div className="fractal-fps-counter" style={{ pointerEvents: 'none' }}>
-          {fps} FPS
         </div>
       )}
     </>
