@@ -1,9 +1,9 @@
-import { SierpinskiNav } from '@/components/Projects/SierpinskiNav'
+import { FractalTree } from '@/components/Projects/FractalTree'
 
 export default function Projects() {
   return (
     <section className="page">
-      <SierpinskiNav />
+      <FractalTree />
     </section>
   )
 }
