@@ -1,0 +1,3 @@
+gket.dev, www.gket.dev {
+    reverse_proxy app:80
+}
