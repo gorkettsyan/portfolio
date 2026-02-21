@@ -117,10 +117,17 @@ export function useFractalEngine(canvasRef, type = 'julia', options = {}) {
     vaoRef.current = createQuadVAO(gl)
     setIsReady(true)
 
+    // On mobile, orientation always drives the fractal — no need to wait for
+    // a "first interaction" threshold. Skip auto-orbit blending entirely.
+    const isMobile = navigator.maxTouchPoints > 0
+    if (isMobile) {
+      userInteractedRef.current = true
+      mouseBlendRef.current = 1
+    }
+
     let lastFrameTime = performance.now()
     const animate = () => {
       const now       = performance.now()
-      const deltaTime = (now - lastFrameTime) / 1000
       lastFrameTime   = now
 
       // Zoom/center fixed for Julia
@@ -142,11 +149,14 @@ export function useFractalEngine(canvasRef, type = 'julia', options = {}) {
         0.1  + Math.sin(t * 0.15 * 1.618) * 0.13,
       ]
 
-      if (mousePos && (Math.abs(mousePos.x) > 0.015 || Math.abs(mousePos.y) > 0.015)) {
-        userInteractedRef.current = true
-      }
-      if (userInteractedRef.current) {
-        mouseBlendRef.current = Math.min(1, mouseBlendRef.current + 0.006)
+      // Desktop only: blend from auto-orbit to mouse on first significant movement
+      if (!isMobile) {
+        if (mousePos && (Math.abs(mousePos.x) > 0.015 || Math.abs(mousePos.y) > 0.015)) {
+          userInteractedRef.current = true
+        }
+        if (userInteractedRef.current) {
+          mouseBlendRef.current = Math.min(1, mouseBlendRef.current + 0.006)
+        }
       }
 
       const mouseC = mousePos
