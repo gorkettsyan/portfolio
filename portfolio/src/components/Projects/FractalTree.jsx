@@ -26,11 +26,11 @@ function buildTree(w, h) {
   const leafSize  = h * 0.03   // base leaf size
 
   const CHILDREN  = [3, 3]
-  const SPREADS   = [0.38, 0.30].map(s => s * Math.PI)
-  const LEN_SCALE = [0.68, 0.72]
+  const SPREADS   = [0.44, 0.34].map(s => s * Math.PI)
+  const LEN_SCALE = [0.65, 0.70]
 
   function node(x1, y1, angle, length, depth, ci, pi) {
-    const jitter = depth > 0 ? (rand() - 0.5) * 0.18 : 0
+    const jitter = depth > 0 ? (rand() - 0.5) * 0.28 : 0
     const a = angle + jitter
     const x2 = x1 + Math.cos(a) * length
     const y2 = y1 + Math.sin(a) * length
@@ -55,12 +55,26 @@ function buildTree(w, h) {
 
     // Pre-generate leaf cluster for project nodes
     if (depth === MAX_DEPTH - 1) {
-      const count = 4 + Math.floor(rand() * 3)  // 4–6 leaves
+      const count = 8 + Math.floor(rand() * 5)  // 8–12 leaves
       n.leaves = Array.from({ length: count }, () => ({
-        angleOffset: (rand() - 0.5) * Math.PI * 0.75,
-        size:        leafSize * (0.55 + rand() * 0.9),
+        angleOffset: (rand() - 0.5) * Math.PI * 0.95,
+        size:        leafSize * (0.45 + rand() * 1.1),
         phase:       rand() * Math.PI * 2,
-        opacity:     0.55 + rand() * 0.45,
+        opacity:     0.5 + rand() * 0.5,
+        tPos:        0.45 + rand() * 0.55,  // scatter along branch (45–100% of length)
+      }))
+
+      // Visual twigs — 2–3 short extra branches from the tip, no interaction data
+      n.twigs = Array.from({ length: 2 + Math.floor(rand() * 2) }, () => ({
+        angle:  (rand() - 0.5) * 0.8,
+        len:    length * (0.22 + rand() * 0.2),
+        phase:  rand() * Math.PI * 2,
+        leaves: Array.from({ length: 3 + Math.floor(rand() * 4) }, () => ({
+          angleOffset: (rand() - 0.5) * Math.PI * 0.9,
+          size:        leafSize * (0.3 + rand() * 0.45),
+          phase:       rand() * Math.PI * 2,
+          opacity:     0.35 + rand() * 0.45,
+        })),
       }))
     }
 
@@ -191,17 +205,18 @@ export function FractalTree() {
       const cpx = sx + (ex - sx) * 0.5 + Math.cos(angle + Math.PI / 2) * bow
       const cpy = sy + (ey - sy) * 0.5 + Math.sin(angle + Math.PI / 2) * bow
 
-      // Color: deep teal → bright cyan
+      // Color: warm dark teal at trunk → bright cyan at tips
       const tc    = node.depth / (MAX_DEPTH - 1)
-      const g     = Math.round(175 + tc * 70)
-      const b     = Math.round(135 + tc * 77)
-      const alpha = 0.28 + tc * 0.52
+      const r     = Math.round(55 * (1 - tc))
+      const g     = Math.round(115 + tc * 130)
+      const b     = Math.round(85  + tc * 127)
+      const alpha = 0.38 + tc * 0.42
 
       ctx.beginPath()
       ctx.moveTo(sx, sy)
       ctx.quadraticCurveTo(cpx, cpy, ex, ey)
-      ctx.strokeStyle = `rgba(0,${g},${b},${alpha})`
-      ctx.lineWidth   = Math.max(0.5, Math.pow(MAX_DEPTH - node.depth, 1.5) * 0.85)
+      ctx.strokeStyle = `rgba(${r},${g},${b},${alpha})`
+      ctx.lineWidth   = Math.max(0.5, Math.pow(MAX_DEPTH - node.depth + 0.7, 2.6) * 0.32)
       ctx.lineCap     = 'round'
       ctx.stroke()
 
@@ -211,25 +226,56 @@ export function FractalTree() {
         const isHovered = hoveredRef.current &&
           hoveredRef.current.ci === node.ci && hoveredRef.current.pi === node.pi
 
+        // Hovered glow at endpoint
+        if (isHovered) {
+          const grd = ctx.createRadialGradient(ex, ey, 0, ex, ey, dims.h * 0.066)
+          grd.addColorStop(0, 'rgba(0,245,212,0.18)')
+          grd.addColorStop(1, 'rgba(0,245,212,0)')
+          ctx.beginPath()
+          ctx.arc(ex, ey, dims.h * 0.066, 0, Math.PI * 2)
+          ctx.fillStyle = grd
+          ctx.fill()
+        }
+
         for (const leaf of node.leaves) {
-          // Each leaf sways independently
-          const flutter    = wind * 0.35 * Math.sin(t * 2.1 + leaf.phase)
-          const leafAngle  = angle + leaf.angleOffset + flutter
-          const leafScale  = la * (isHovered ? 1.35 : 1.0)
-          const leafAlpha  = leaf.opacity * la * (isHovered ? 1.0 : 0.85)
+          // Scatter leaves along the branch using tPos
+          const lx = sx + (ex - sx) * (leaf.tPos ?? 1)
+          const ly = sy + (ey - sy) * (leaf.tPos ?? 1)
+          const flutter   = wind * 0.4 * Math.sin(t * 2.1 + leaf.phase)
+          const leafAngle = angle + leaf.angleOffset + flutter
+          const leafScale = la * (isHovered ? 1.35 : 1.0)
+          const leafAlpha = leaf.opacity * la * (isHovered ? 1.0 : 0.85)
+          drawLeaf(ctx, lx, ly, leafAngle, leaf.size * leafScale, leafAlpha)
+        }
 
-          // Soft glow behind hovered leaves
-          if (isHovered) {
-            const grd = ctx.createRadialGradient(ex, ey, 0, ex, ey, leaf.size * 1.8)
-            grd.addColorStop(0, 'rgba(0,245,212,0.18)')
-            grd.addColorStop(1, 'rgba(0,245,212,0)')
+        // Visual twigs from tip — thin extra branches for density
+        if (node.twigs && la > 0.5) {
+          const ta = Math.min(1, (la - 0.5) / 0.5)
+          for (const twig of node.twigs) {
+            const twigSway  = wind * 0.5 * Math.sin(t * 1.9 + twig.phase)
+            const twigAngle = angle + twig.angle + twigSway
+            const twigLen   = twig.len * ta
+            const tx = ex + Math.cos(twigAngle) * twigLen
+            const ty = ey + Math.sin(twigAngle) * twigLen
+
+            const twigBow = twigLen * 0.15 * Math.sin(t * 0.4 + twig.phase)
+            const tcpx = ex + (tx - ex) * 0.5 + Math.cos(twigAngle + Math.PI / 2) * twigBow
+            const tcpy = ey + (ty - ey) * 0.5 + Math.sin(twigAngle + Math.PI / 2) * twigBow
+
             ctx.beginPath()
-            ctx.arc(ex, ey, leaf.size * 1.8, 0, Math.PI * 2)
-            ctx.fillStyle = grd
-            ctx.fill()
-          }
+            ctx.moveTo(ex, ey)
+            ctx.quadraticCurveTo(tcpx, tcpy, tx, ty)
+            ctx.strokeStyle = `rgba(0,230,195,0.28)`
+            ctx.lineWidth   = 0.6
+            ctx.lineCap     = 'round'
+            ctx.stroke()
 
-          drawLeaf(ctx, ex, ey, leafAngle, leaf.size * leafScale, leafAlpha)
+            for (const leaf of twig.leaves) {
+              const flutter   = wind * 0.55 * Math.sin(t * 2.6 + leaf.phase)
+              const leafAngle = twigAngle + leaf.angleOffset + flutter
+              drawLeaf(ctx, tx, ty, leafAngle, leaf.size * ta, leaf.opacity * ta * 0.8)
+            }
+          }
         }
 
         // Track for hover detection
