@@ -118,13 +118,40 @@ export function FractalTree() {
   const startRef     = useRef(null)
   const hoveredRef   = useRef(null)
 
-  const [dims, setDims]     = useState({ w: window.innerWidth, h: window.innerHeight })
+  const [dims, setDims]       = useState({ w: window.innerWidth, h: window.innerHeight })
   const [hovered, setHovered] = useState(null)
 
   useEffect(() => {
     const h = () => setDims({ w: window.innerWidth, h: window.innerHeight })
     window.addEventListener('resize', h)
     return () => window.removeEventListener('resize', h)
+  }, [])
+
+  // ── Device orientation → tree wind on mobile ──
+  useEffect(() => {
+    if (!navigator.maxTouchPoints) return
+
+    const handleOrientation = (e) => {
+      if (e.gamma === null) return
+      // gamma: left-right tilt -90..90° → map to 0..1
+      mouseRef.current.x = Math.max(0, Math.min(1, e.gamma / 40 + 0.5))
+    }
+
+    const startListening = () =>
+      window.addEventListener('deviceorientation', handleOrientation)
+
+    if (typeof DeviceOrientationEvent?.requestPermission === 'function') {
+      // iOS 13+: request on first touch (permission may already be granted from main page)
+      window.addEventListener('touchstart', () => {
+        DeviceOrientationEvent.requestPermission()
+          .then(s => { if (s === 'granted') startListening() })
+          .catch(() => {})
+      }, { once: true })
+    } else {
+      startListening()
+    }
+
+    return () => window.removeEventListener('deviceorientation', handleOrientation)
   }, [])
 
   const tree = useMemo(() => buildTree(dims.w, dims.h), [dims])
@@ -265,19 +292,60 @@ export function FractalTree() {
     setHovered(best)
   }, [dims])
 
+  // Touch: update wind direction as finger drags
+  const handleTouchMove = useCallback((e) => {
+    const t = e.touches[0]
+    if (!t) return
+    mouseRef.current = { x: t.clientX / dims.w, y: t.clientY / dims.h }
+  }, [dims])
+
+  // Touch: tap a leaf to show tooltip + open URL
+  const handleTouchEnd = useCallback((e) => {
+    const t = e.changedTouches[0]
+    if (!t) return
+
+    let best = null, bestD = 60  // wider radius for fat fingers
+    for (const leaf of leafPosRef.current) {
+      const d = Math.hypot(leaf.x - t.clientX, leaf.y - t.clientY)
+      if (d < bestD) { bestD = d; best = leaf }
+    }
+
+    if (best) {
+      hoveredRef.current = best.node
+      setHovered(best)
+      if (best.node?.data?.url) window.open(best.node.data.url, '_blank', 'noopener,noreferrer')
+    } else {
+      hoveredRef.current = null
+      setHovered(null)
+    }
+  }, [])
+
   const handleClick = useCallback(() => {
     if (hovered?.node?.data?.url) window.open(hovered.node.data.url, '_blank', 'noopener,noreferrer')
   }, [hovered])
 
+  // Clamp tooltip so it stays fully on-screen
+  const TOOLTIP_W = 296
+  const tooltipPos = hovered ? {
+    left: Math.max(8, Math.min(hovered.x + 14, dims.w - TOOLTIP_W - 8)),
+    top:  Math.max(10, Math.min(hovered.y - 40, dims.h - 240)),
+  } : null
+
   return (
-    <div className="ft-wrap" onMouseMove={handleMouseMove} onClick={handleClick}>
+    <div
+      className="ft-wrap"
+      onMouseMove={handleMouseMove}
+      onClick={handleClick}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
       <canvas
         ref={canvasRef}
         className="ft-canvas"
         style={{ width: dims.w, height: dims.h, cursor: hovered?.node?.data?.url ? 'pointer' : 'default' }}
       />
       {hovered?.node?.data && (
-        <div className="ft-tooltip" style={{ left: hovered.x + 14, top: hovered.y - 40 }}>
+        <div className="ft-tooltip" style={tooltipPos}>
           <div className="ft-tt-header">
             <span className="ft-tt-title">{hovered.node.data.title}</span>
             {hovered.node.data.company && (

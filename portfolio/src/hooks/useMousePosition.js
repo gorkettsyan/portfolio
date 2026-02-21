@@ -1,70 +1,81 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
 
 /**
- * Hook that tracks the user's mouse position and normalizes it to [-1, 1] range.
- *
- * Returns:
- * - x: -1 (far left) to +1 (far right)
- * - y: -1 (bottom) to +1 (top) in WebGL convention
- *
- * Updates via requestAnimationFrame for smooth, throttled updates.
- * On touch devices, returns a static visually pleasant Julia constant.
+ * Returns normalized pointer position in [-1, 1] range.
+ * Desktop: tracks mouse (x: left→right, y: bottom→top WebGL convention).
+ * Mobile:  tracks device tilt via DeviceOrientationEvent (gamma/beta).
+ *          On iOS 13+, permission is requested on first touch.
  */
 export function useMousePosition() {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
 
   useEffect(() => {
-    // Detect if device is touch-based
-    const detectTouch = () => {
-      const hasTouch =
-        window.matchMedia('(hover: none)').matches ||
-        navigator.maxTouchPoints > 0 ||
-        navigator.msMaxTouchPoints > 0;
-      setIsTouchDevice(hasTouch);
-    };
+    const isTouchDevice =
+      window.matchMedia('(hover: none)').matches || navigator.maxTouchPoints > 0
 
-    detectTouch();
+    let rafId = null
+    const cleanups = []
 
-    // If touch device, use static constant and skip mouse tracking
-    if (isTouchDevice) {
-      setMousePos({ x: -0.4, y: 0.6 });
-      return;
+    if (!isTouchDevice) {
+      // ── Desktop: mouse tracking ──
+      let lastX = 0, lastY = 0
+
+      const handleMouseMove = (e) => {
+        lastX = e.clientX
+        lastY = e.clientY
+        if (rafId === null) {
+          rafId = requestAnimationFrame(() => {
+            setMousePos({
+              x: (lastX / window.innerWidth)  * 2 - 1,
+              y: 1 - (lastY / window.innerHeight) * 2,
+            })
+            rafId = null
+          })
+        }
+      }
+
+      window.addEventListener('mousemove', handleMouseMove)
+      cleanups.push(() => window.removeEventListener('mousemove', handleMouseMove))
+
+    } else {
+      // ── Mobile: device orientation (tilt to control) ──
+      const handleOrientation = (e) => {
+        if (e.gamma === null || rafId !== null) return
+        const gamma = e.gamma  // left-right tilt: -90..90°
+        const beta  = e.beta   // forward-back tilt: -180..180°
+        rafId = requestAnimationFrame(() => {
+          setMousePos({
+            x: Math.max(-1, Math.min(1,  gamma / 30)),
+            y: Math.max(-1, Math.min(1, -beta  / 30)),
+          })
+          rafId = null
+        })
+      }
+
+      const startListening = () =>
+        window.addEventListener('deviceorientation', handleOrientation)
+
+      if (typeof DeviceOrientationEvent?.requestPermission === 'function') {
+        // iOS 13+: needs a user gesture before requestPermission can be called
+        const onFirstTouch = () => {
+          DeviceOrientationEvent.requestPermission()
+            .then(state => { if (state === 'granted') startListening() })
+            .catch(() => {})
+        }
+        window.addEventListener('touchstart', onFirstTouch, { once: true })
+        cleanups.push(() => window.removeEventListener('touchstart', onFirstTouch))
+      } else {
+        startListening()
+      }
+
+      cleanups.push(() => window.removeEventListener('deviceorientation', handleOrientation))
     }
 
-    let rafId = null;
-    let lastMouseX = 0;
-    let lastMouseY = 0;
-
-    const handleMouseMove = (e) => {
-      // Store raw mouse coordinates
-      lastMouseX = e.clientX;
-      lastMouseY = e.clientY;
-
-      // Schedule update via RAF to throttle to ~60fps
-      if (rafId === null) {
-        rafId = requestAnimationFrame(() => {
-          // Normalize to [-1, 1]
-          // x: 0 to window.innerWidth → -1 to +1
-          // y: 0 to window.innerHeight → +1 to -1 (flip for WebGL convention)
-          const x = (lastMouseX / window.innerWidth) * 2 - 1;
-          const y = 1 - (lastMouseY / window.innerHeight) * 2;
-
-          setMousePos({ x, y });
-          rafId = null;
-        });
-      }
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      if (rafId !== null) {
-        cancelAnimationFrame(rafId);
-      }
-    };
-  }, [isTouchDevice]);
+      cleanups.forEach(fn => fn())
+      if (rafId !== null) cancelAnimationFrame(rafId)
+    }
+  }, [])
 
-  return mousePos;
+  return mousePos
 }

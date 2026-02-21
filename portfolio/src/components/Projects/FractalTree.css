@@ -3,6 +3,7 @@
   inset: 0;
   pointer-events: all;
   z-index: 1;
+  touch-action: none;
 }
 
 .ft-canvas {
@@ -24,7 +25,7 @@
   border-radius: 6px;
   padding: 8px 12px;
   backdrop-filter: blur(8px);
-  max-width: 280px;
+  max-width: min(280px, calc(100vw - 32px));
   white-space: normal;
   animation: ft-tip-in 0.15s ease forwards;
 }
