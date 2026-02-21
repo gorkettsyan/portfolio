@@ -14,4 +14,3 @@ FROM caddy:2-alpine
 
 COPY --from=builder /app/dist /srv
 
-EXPOSE 80 443
