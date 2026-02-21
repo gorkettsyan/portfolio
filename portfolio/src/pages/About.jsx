@@ -11,7 +11,7 @@ const experience = [
       'Built Microsoft 365 integrations — Graph API, Exchange Online, SharePoint — handling auth, permissions, and throttling',
       'Deployed containerised services to AWS ECS/Fargate with SQS queue-depth autoscaling',
       'Maintained CI/CD pipelines with GitHub Actions; logging, monitoring, and alerting across distributed services',
-      'Code reviews, junior mentorship, backend architecture and engineering standards',
+      'Code reviews, backend architecture and engineering standards',
     ],
   },
   {
