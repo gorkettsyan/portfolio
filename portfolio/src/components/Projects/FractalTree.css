@@ -106,3 +106,24 @@
   color: rgba(0, 245, 212, 0.3);
   pointer-events: none;
 }
+
+/* ── Hint label ── */
+.ft-hint-label {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(0, 245, 212, 0.22);
+  pointer-events: none;
+  white-space: nowrap;
+  animation: ft-hint-fade 3s ease 2s both;
+}
+
+@keyframes ft-hint-fade {
+  from { opacity: 0; transform: translateX(-50%) translateY(4px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}

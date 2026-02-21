@@ -303,6 +303,7 @@ export function FractalTree() {
         </div>
       )}
       <span className="ft-page-label">Projects</span>
+      <span className="ft-hint-label">hover leaves · click to open</span>
     </div>
   )
 }
