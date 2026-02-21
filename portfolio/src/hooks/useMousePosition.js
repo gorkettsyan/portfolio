@@ -2,9 +2,14 @@ import { useState, useEffect } from 'react'
 
 /**
  * Returns normalized pointer position in [-1, 1] range.
- * Desktop: tracks mouse (x: left→right, y: bottom→top WebGL convention).
- * Mobile:  tracks device tilt via DeviceOrientationEvent (gamma/beta).
- *          On iOS 13+, permission is requested on first touch.
+ *
+ * Desktop: tracks mouse movement.
+ * Mobile:  two inputs, last one wins:
+ *   1. Touch drag   — drag finger right = same as mouse right (always works)
+ *   2. Device tilt  — tilt phone right  = same as mouse right (needs gyro + permission)
+ *
+ * iOS 13+: orientation permission is requested immediately (succeeds if previously
+ * granted) and again on first tap (for first-time visitors).
  */
 export function useMousePosition() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
@@ -14,13 +19,13 @@ export function useMousePosition() {
       window.matchMedia('(hover: none)').matches || navigator.maxTouchPoints > 0
 
     let rafId = null
-    const cleanups = []
+    let lastTouchMs = 0  // tracks when user last dragged a finger
 
+    // ── Desktop ──────────────────────────────────────────────────────────────
     if (!isTouchDevice) {
-      // ── Desktop: mouse tracking ──
       let lastX = 0, lastY = 0
 
-      const handleMouseMove = (e) => {
+      const onMove = (e) => {
         lastX = e.clientX
         lastY = e.clientY
         if (rafId === null) {
@@ -34,45 +39,64 @@ export function useMousePosition() {
         }
       }
 
-      window.addEventListener('mousemove', handleMouseMove)
-      cleanups.push(() => window.removeEventListener('mousemove', handleMouseMove))
+      window.addEventListener('mousemove', onMove)
+      return () => {
+        window.removeEventListener('mousemove', onMove)
+        if (rafId !== null) cancelAnimationFrame(rafId)
+      }
+    }
 
-    } else {
-      // ── Mobile: device orientation (tilt to control) ──
-      const handleOrientation = (e) => {
-        if (e.gamma === null || rafId !== null) return
-        const gamma = e.gamma  // left-right tilt: -90..90°
-        const beta  = e.beta   // forward-back tilt: -180..180°
-        rafId = requestAnimationFrame(() => {
-          setMousePos({
-            x: Math.max(-1, Math.min(1,  gamma / 30)),
-            y: Math.max(-1, Math.min(1, -beta  / 30)),
-          })
-          rafId = null
+    // ── Mobile: touch drag ───────────────────────────────────────────────────
+    // Drag finger right/up = same as moving mouse right/up. Always works, no
+    // permissions needed. Gives priority over orientation for 600 ms after drag.
+    const onTouchMove = (e) => {
+      const t = e.touches[0]
+      if (!t) return
+      lastTouchMs = Date.now()
+      setMousePos({
+        x: (t.clientX / window.innerWidth)  * 2 - 1,
+        y: 1 - (t.clientY / window.innerHeight) * 2,
+      })
+    }
+    window.addEventListener('touchmove', onTouchMove, { passive: true })
+
+    // ── Mobile: device tilt (gyroscope) ─────────────────────────────────────
+    // Tilt phone right (+gamma) = same as mouse right. Overridden by active drag.
+    const onOrientation = (e) => {
+      if (e.gamma === null) return
+      if (Date.now() - lastTouchMs < 600) return  // yield to active drag
+      setMousePos({
+        x: Math.max(-1, Math.min(1,  e.gamma / 30)),
+        y: Math.max(-1, Math.min(1, -e.beta  / 30)),
+      })
+    }
+
+    const listenOrientation = () => {
+      window.addEventListener('deviceorientation',         onOrientation)
+      window.addEventListener('deviceorientationabsolute', onOrientation)  // Chrome Android
+    }
+
+    if (typeof DeviceOrientationEvent?.requestPermission === 'function') {
+      // iOS 13+: try immediately (works if permission was granted before)
+      DeviceOrientationEvent.requestPermission()
+        .then(s => { if (s === 'granted') listenOrientation() })
+        .catch(() => {
+          // Not yet granted — show dialog on first tap anywhere
+          window.addEventListener('touchstart', () => {
+            DeviceOrientationEvent.requestPermission()
+              .then(s => { if (s === 'granted') listenOrientation() })
+              .catch(() => {})
+          }, { once: true })
         })
-      }
-
-      const startListening = () =>
-        window.addEventListener('deviceorientation', handleOrientation)
-
-      if (typeof DeviceOrientationEvent?.requestPermission === 'function') {
-        // iOS 13+: needs a user gesture before requestPermission can be called
-        const onFirstTouch = () => {
-          DeviceOrientationEvent.requestPermission()
-            .then(state => { if (state === 'granted') startListening() })
-            .catch(() => {})
-        }
-        window.addEventListener('touchstart', onFirstTouch, { once: true })
-        cleanups.push(() => window.removeEventListener('touchstart', onFirstTouch))
-      } else {
-        startListening()
-      }
-
-      cleanups.push(() => window.removeEventListener('deviceorientation', handleOrientation))
+    } else {
+      // Android + other browsers: no permission needed
+      listenOrientation()
     }
 
     return () => {
-      cleanups.forEach(fn => fn())
+      window.removeEventListener('touchmove',               onTouchMove)
+      window.removeEventListener('deviceorientation',       onOrientation)
+      window.removeEventListener('deviceorientationabsolute', onOrientation)
       if (rafId !== null) cancelAnimationFrame(rafId)
     }
   }, [])
