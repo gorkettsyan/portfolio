@@ -59,14 +59,14 @@ export function FractalBackground({ type = 'mandelbrot', mousePos = null, progre
 
     cancelFade()
 
-    if (reducedMotion) {
-      // Instant swap
+    // Instant cut when navigating to a page with no background, or with reduced motion
+    if (!type || reducedMotion) {
       if (activeSlot === 'a') {
-        setSlotB({ type, opacity: 1 })
+        setSlotB({ type, opacity: type ? 1 : 0 })
         setSlotA({ type: null, opacity: 0 })
         setActiveSlot('b')
       } else {
-        setSlotA({ type, opacity: 1 })
+        setSlotA({ type, opacity: type ? 1 : 0 })
         setSlotB({ type: null, opacity: 0 })
         setActiveSlot('a')
       }
