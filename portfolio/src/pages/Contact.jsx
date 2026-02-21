@@ -1,9 +1,16 @@
+import { useEffect } from 'react'
 import { Mail, Github, Linkedin } from 'lucide-react'
 import { BackButton } from '@/components/BackButton'
 import { portfolio } from '@/data/portfolio'
 import './Contact.css'
 
 export default function Contact() {
+  useEffect(() => {
+    const prevent = (e) => e.preventDefault()
+    document.addEventListener('touchmove', prevent, { passive: false })
+    return () => document.removeEventListener('touchmove', prevent)
+  }, [])
+
   return (
     <section className="page contact-page">
       <BackButton />
