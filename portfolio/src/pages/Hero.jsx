@@ -1,7 +1,16 @@
+import { useEffect } from 'react'
 import { portfolio } from '@/data/portfolio'
 import './Hero.css'
 
 export default function Hero() {
+  // Prevent iOS Safari rubber-band scroll while on the hero page.
+  // The touchmove listener in useMousePosition still fires — only the
+  // browser's default scroll/bounce behaviour is suppressed.
+  useEffect(() => {
+    const prevent = (e) => e.preventDefault()
+    document.addEventListener('touchmove', prevent, { passive: false })
+    return () => document.removeEventListener('touchmove', prevent)
+  }, [])
   const nameDelay  = 0.6   // seconds before first character appears
   const ruleDelay  = nameDelay + portfolio.name.length * 0.08 + 0.2
   const titleDelay = ruleDelay + 0.4
