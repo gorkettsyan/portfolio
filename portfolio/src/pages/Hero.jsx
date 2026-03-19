@@ -11,26 +11,13 @@ export default function Hero() {
     document.addEventListener('touchmove', prevent, { passive: false })
     return () => document.removeEventListener('touchmove', prevent)
   }, [])
-  const nameDelay  = 0.6   // seconds before first character appears
-  const ruleDelay  = nameDelay + portfolio.name.length * 0.08 + 0.2
+  const ruleDelay  = 0.6
   const titleDelay = ruleDelay + 0.4
   const scrollDelay = titleDelay + 0.8
 
   return (
     <section className="page hero-page">
       <div className="hero-identity">
-        <h1 className="hero-name" aria-label={portfolio.name}>
-          {portfolio.name.split('').map((ch, i) => (
-            <span
-              key={i}
-              className="hero-char"
-              style={{ animationDelay: `${nameDelay + i * 0.08}s` }}
-            >
-              {ch === ' ' ? '\u00A0' : ch}
-            </span>
-          ))}
-        </h1>
-
         <div
           className="hero-rule"
           style={{ animationDelay: `${ruleDelay}s` }}
